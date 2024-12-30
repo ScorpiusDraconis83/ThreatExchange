@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OpenMediaMatch"
+version = "0.0.1"
+authors = [
+    { name="Meta Platforms, Inc. and affiliates", email="threatexchange@meta.com" },
+]
+description = "Open Media Match"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "flask",
+    "flask_sqlalchemy",
+    "flask_migrate",
+    "psycopg2",
+    "requests",
+    "threatexchange>=1.2.3",
+    "flask_apscheduler",
+    "python-dateutil",
+    "python-json-logger",
+]
+
+[project.optional-dependencies]
+all = [
+    "mypy",
+    "black",
+    "pytest",
+    "types-Flask-Migrate",
+    "types-requests",
+    "types-psycopg2",
+    "types-python-dateutil",
+    "gunicorn",
+    "flask_apscheduler"
+]
+
+test = [ "pytest" ]
+
+prod = [ "gunicorn" ]
+
+[tool.mypy]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_optional = true
+
+[tool.setuptools]
+py-modules = []
+
+[[tool.mypy.overrides]]
+module = "flask_apscheduler.*,importlib_metadata.*"
+ignore_missing_imports = true
+
+[project.urls]
+"Homepage" = "https://github.com/facebook/ThreatExchange/"
+"Bug Tracker" = "https://github.com/facebook/ThreatExchange/issues"

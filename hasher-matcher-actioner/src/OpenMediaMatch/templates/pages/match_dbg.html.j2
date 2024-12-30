@@ -1,0 +1,34 @@
+{# Copyright (c) Meta Platforms, Inc. and affiliates. #}
+<div class="container">
+    <div class="py-5 text-center">
+        <h3>Matching and SignalType Debugger</h3>
+        <p class="lead">Directly upload files and URLs to explore matching algorithms.</p>
+    </div>
+    <div class="row justify-content-center gx-3">
+        <div class="col-6">
+            {% with upload_id="match_dbg_left" %}
+            {% include "components/match_dbg_upload.html.j2" %}
+            {% endwith %}
+        </div>
+        <div class="col-6">
+            {% with upload_id="match_dbg_right" %}
+            {% include "components/match_dbg_upload.html.j2" %}
+            {% endwith %}
+        </div>
+    </div>
+    <div id="match-dbg-distance-container" class="card my-2 w-100 p-3 bg-light" hidden>
+        <h4 class="card-title">Hash distance</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Match</th>
+                    <th>Distance</th>
+                </tr>
+            </thead>
+            <tbody id="match-dbg-distance-results"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/match_dbg.js') }}"></script>

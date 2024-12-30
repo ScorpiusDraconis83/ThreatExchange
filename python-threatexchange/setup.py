@@ -24,7 +24,7 @@ for extension_dir in extensions_dir.iterdir():
 all_extras = set(sum(extras_require.values(), []))
 # We might not get any value from splitting these all out
 extras_require["test"] = sorted({"pytest"} | all_extras)
-extras_require["package"] = ["wheel==0.38.4"]
+extras_require["package"] = ["wheel"]
 extras_require["lint"] = ["black"]
 extras_require["types"] = [
     "mypy==1.7.1",
@@ -43,7 +43,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Facebook",
-    author_email="threatexchange@fb.com",
+    author_email="threatexchange@meta.com",
     license="BSD",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -59,11 +59,14 @@ setup(
         "requests",
         "urllib3",  # For allow_methods
         "python-dateutil",
+        "types-python-dateutil",
         "dacite",
         "Pillow",  # pdq
         "pdqhash",  # pdq
         "faiss-cpu",  # faiss
         "numpy",  # faiss
+        "packaging",  # fix ModuleNotFoundError: No module named 'packaging'
+        # in faiss/loader.py when running docker container
     ],
     extras_require=extras_require,
     entry_points={

@@ -17,26 +17,37 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: "3.10"
       - name: Install packaging dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          python vpdq-release.py -i
-      - name: Package threatexchange
+          python -m pip install -r packaging-requirements.txt
+      - name: Install build dependencies
         run: |
-          python vpdq-release.py -r
+          sudo apt-get update
+          sudo apt-get install -y python3-dev pkg-config cmake ffmpeg libavcodec-dev libavformat-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev
+
+      - name: Package
+        run: |
+          python -m build --sdist
+
+      - name: Ensure packaged build runs
+        run: |
+          python -m pip install dist/vpdq*.tar.gz
+          python -c "import vpdq"
+
       - name: Publish distribution to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.test_pypi_password }}
-          repository_url: https://test.pypi.org/legacy/
-          packages_dir: vpdq/dist
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: vpdq/dist
+
       - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.pypi_password }}
-          packages_dir: vpdq/dist
+          packages-dir: vpdq/dist

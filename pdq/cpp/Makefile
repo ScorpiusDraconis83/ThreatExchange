@@ -32,7 +32,8 @@ LIBHDRS=\
  io/pdqio.h \
  index/mih.h \
  hashing/torben.h \
- ./CImg.h
+ ./CImg.h \
+ common/pdqutils.h
 
 LIBSRCS=\
  common/pdqhashtypes.cpp \
@@ -41,7 +42,8 @@ LIBSRCS=\
  hashing/pdqhashing.cpp \
  downscaling/downscaling.cpp \
  io/pdqio.cpp \
- hashing/torben.cpp
+ hashing/torben.cpp \
+ common/pdqutils.cpp
 
 MAINS=\
  pdq-photo-hasher \
@@ -54,7 +56,9 @@ MAINS=\
  pdq-downsample-demo \
  test-bits \
  hamming-tabulate \
- test-hamming
+ test-hamming \
+ benchmark-query \
+ benchmark-photo-hasher
 
 WASMMAINS=pdq-photo-hasher
 
@@ -125,6 +129,11 @@ clusterize256x-prof: bin/clusterize256x.cpp $(LIBSRCS) $(LIBHDRS)
 	$(CCDBG) -pg bin/clusterize256x.cpp $(LIBSRCS) -o clusterize256x-prof $(LFLAGS) -lpthread
 mih-query: bin/mih-query.cpp $(LIBSRCS) $(LIBHDRS)
 	$(CCOPT) bin/mih-query.cpp $(LIBSRCS) -o mih-query $(LFLAGS)
+
+benchmark-query: bin/benchmark-query.cpp $(LIBSRCS) $(LIBHDRS)
+	$(CCOPT) bin/benchmark-query.cpp $(LIBSRCS) -o benchmark-query $(LFLAGS)
+benchmark-photo-hasher: bin/benchmark-photo-hasher.cpp $(LIBSRCS) $(LIBHDRS)
+	$(CCOPT) bin/benchmark-photo-hasher.cpp $(LIBSRCS) -o benchmark-photo-hasher $(LFLAGS)
 
 # Profile version. Usage:
 # * make pdq-photo-hasher-prof

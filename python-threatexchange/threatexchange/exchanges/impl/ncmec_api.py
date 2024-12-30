@@ -45,6 +45,7 @@ class NCMECCheckpoint(
 
     @classmethod
     def from_ncmec_fetch(cls, response: api.GetEntriesResponse) -> "NCMECCheckpoint":
+        """Synthesizes a checkpoint from the API response"""
         return cls(response.max_timestamp)
 
     def __setstate__(self, d: t.Dict[str, t.Any]) -> None:
@@ -350,9 +351,9 @@ class NCMECSignalExchangeAPI(
         collab: NCMECCollabConfig,
         fetched: t.Mapping[str, api.NCMECEntryUpdate],
     ) -> t.Dict[t.Type[SignalType], t.Dict[str, NCMECSignalMetadata]]:
-        mapping: t.Mapping[
-            t.Tuple[api.NCMECEntryType, str], t.Type[SignalType]
-        ] = _get_conversion(signal_types)
+        mapping: t.Mapping[t.Tuple[api.NCMECEntryType, str], t.Type[SignalType]] = (
+            _get_conversion(signal_types)
+        )
         ret: t.Dict[t.Type[SignalType], t.Dict[str, NCMECSignalMetadata]] = {}
         for entry in fetched.values():
             if entry.deleted:

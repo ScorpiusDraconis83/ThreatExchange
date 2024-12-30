@@ -9,40 +9,22 @@ TODO: Slim down to only what we need
 import copy
 import json
 import typing as t
-import os
-import pathlib
 import re
 
 import urllib.parse
 import urllib.error
 
 import requests
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util.retry import Retry
 
 
 from .api_representations import ThreatPrivacyGroup
+from threatexchange.exchanges.clients.utils.common import TimeoutHTTPAdapter
 
 
 def is_valid_app_token(token: str) -> bool:
     """Returns true if the string looks like a valid token"""
     return bool(re.match("[0-9]{8,}(?:%7C|\\|)[a-zA-Z0-9_\\-]{20,}", token))
-
-
-class TimeoutHTTPAdapter(HTTPAdapter):
-    """
-    Plug into requests to get a well-behaved session that does not wait for eternity.
-    H/T: https://findwork.dev/blog/advanced-usage-python-requests-timeouts-retries-hooks/#setting-default-timeouts
-    """
-
-    def __init__(self, *args, timeout=5, **kwargs):
-        self.timeout = timeout
-        super().__init__(*args, **kwargs)
-
-    def send(self, request, *, timeout=None, **kwargs):
-        if timeout is None:
-            timeout = self.timeout
-        return super().send(request, timeout=timeout, **kwargs)
 
 
 class _CursoredResponse:
@@ -81,7 +63,7 @@ class _CursoredResponse:
 
 
 class ThreatExchangeAPI:
-    _TE_BASE_URL = "https://graph.facebook.com/v9.0"
+    _TE_BASE_URL = "https://graph.facebook.com/v21.0"
 
     # This is just a keystroke-saver / error-avoider for passing around
     # post-parameter field names.
@@ -497,6 +479,45 @@ class ThreatExchangeAPI:
             {"reactions_to_remove": reaction},
             showURLs=showURLs,
             dryRun=dryRun,
+        )
+
+    def react_matched_threat_descriptor(
+        self, descriptor_id, *, showURLs=False, dryRun=False
+    ):
+        """
+        Does a POST to the reactions API indicating that this descriptor's hash was
+        matched.
+
+        See: https://developers.facebook.com/docs/threat-exchange/reference/reacting
+        """
+        return self.react_to_threat_descriptor(
+            descriptor_id, "SAW_THIS_TOO", showURLs=showURLs, dryRun=dryRun
+        )
+
+    def react_upvote_threat_descriptor(
+        self, descriptor_id, *, showURLs=False, dryRun=False
+    ):
+        """
+        Does a POST to the reactions API indicating that this descriptor's hash is
+        helpful for discovering harmful content
+
+        See: https://developers.facebook.com/docs/threat-exchange/reference/reacting
+        """
+        return self.react_to_threat_descriptor(
+            descriptor_id, "HELPFUL", showURLs=showURLs, dryRun=dryRun
+        )
+
+    def react_downvote_threat_descriptor(
+        self, descriptor_id, *, showURLs=False, dryRun=False
+    ):
+        """
+        Does a POST to the reactions API indicating that this descriptor's hash is
+        NOT helpful for discovering harmful content
+
+        See: https://developers.facebook.com/docs/threat-exchange/reference/reacting
+        """
+        return self.react_to_threat_descriptor(
+            descriptor_id, "NOT_HELPFUL", showURLs=showURLs, dryRun=dryRun
         )
 
     def upload_threat_descriptor(self, postParams, showURLs, dryRun):

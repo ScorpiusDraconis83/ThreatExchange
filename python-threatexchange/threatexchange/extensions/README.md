@@ -15,7 +15,7 @@ A number of extensions that require additional libraries to be installed, but ar
 You can create your own extensions easily, and we encourage you to do so!
 
 ## A Note on Name Collisions
-ContentType, SignalType, and SignalExchangeAPI all require a unique string name to enable the various lookups. There will be a challenge for extension writers to choose short, human-friendly names that have not already been used by others. As long as a runtime does not have two types with the same short name, it will still work properly. To aid with finding a free name, we'll try and keep a list of extensions here with their names. Feel free to reach out to threatexchange@fb.com to get your extension listed here.
+ContentType, SignalType, and SignalExchangeAPI all require a unique string name to enable the various lookups. There will be a challenge for extension writers to choose short, human-friendly names that have not already been used by others. As long as a runtime does not have two types with the same short name, it will still work properly. To aid with finding a free name, we'll try and keep a list of extensions here with their names. Feel free to reach out to threatexchange@meta.com to get your extension listed here.
 
 | Type | Package Name | Name | Note |
 | ------------- | ------------- | ------------- | ------------- |
@@ -30,7 +30,7 @@ ContentType, SignalType, and SignalExchangeAPI all require a unique string name 
 | Signal | threatexchange.extensions.vpdq | vpdq | vPDQ video hashing
 | Signal | [tx-extension-clip](https://pypi.org/project/tx-extension-clip/) | clip | [CLIP](https://github.com/openai/CLIP) image embedding with a preloaded model
 | Signal | TBD | tmk_pdqf | The planned name for TMK+PDQF video hashing 
-| Signal | N/A | photodna | Reserved to prevent confusion with PhotoDNA
+| Signal | [threatexchange_photodna](https://github.com/TechnologyCoalitionOrg/) | photodna | Microsoft PhotoDNA hashing (PhotoDNA license required, see [Microsoft](https://www.microsoft.com/en-us/PhotoDNA/Contact-Us) or the [Tech Coalition](https://www.technologycoalition.org/contact)).
 | Content | threatexchange | text | Text files and strings
 | Content | threatexchange | photo | Photo formats
 | Content | threatexchange | video | Video formats
@@ -119,3 +119,5 @@ $ threatexchange config extensions remove threatexchangecontributions.myproject
 # Oh no I broke everything and am filled with sadness and regret!
 $ rm ~/.threatexchange  # factory reset
 ```
+
+There is also a helper for testing new implementations of SignalType in `/threatexchange/signal_type/tests/signal_type_test_helper.py`. We strongly recommend you use this test to prove your SignalType implementation works as expected.
