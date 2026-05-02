@@ -1,3 +1,8 @@
+---
+prev:
+  text: Overview
+---
+
 # Goals and non-goals
 
 ## Goals

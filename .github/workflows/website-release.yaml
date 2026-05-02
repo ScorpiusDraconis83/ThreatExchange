@@ -1,0 +1,77 @@
+name: Website Build & Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - website/**
+      - .github/workflows/deploy-website.yaml
+
+# Sets base permissions of the GITHUB_TOKEN
+permissions:
+  contents: read
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: deploy-website
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: website
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'Facebook/ThreatExchange' }}
+    env:
+      PAGES_PATH: /ThreatExchange/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        # with:
+        #   fetch-depth: 0 # Not needed if lastUpdated is not enabled
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          package_json_file: website/package.json
+          run_install: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: "website/.node-version"
+          cache-dependency-path: "website/pnpm-lock.yaml"
+          check-latest: true
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Build with VitePress
+        run: pnpm build --base ${{ env.PAGES_PATH }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: website/.vitepress/dist
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

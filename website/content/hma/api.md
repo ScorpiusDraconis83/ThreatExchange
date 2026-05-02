@@ -1,3 +1,6 @@
+---
+title: "API | HMA"
+---
 # API
 
 While HMA provides a simple UI for debugging and development, scanning content at scale will require API integration. Additionally, if you wish to provide a UI with more capabilities like access control, you can use the API to build a more featureful version of the debugging UI.

@@ -5,7 +5,7 @@ Hasher-Matcher-Actioner (aka HMA) includes a web app where users can configure t
 There are 4 pages in the app:
 
 ## **Dashboard (`/ui/`)**
-![UI dashboard](https://github.com/user-attachments/assets/d557a6a9-6772-433a-83e6-864b226522b7)
+![UI dashboard](./images/ui-dashboard.webp)
 
 * View system status  
 * See signal types and content types  
@@ -165,7 +165,7 @@ The seeded data is stored in a PostgreSQL database that runs inside the dev cont
 * **Production Setup:** Real deployments need proper app registration with Facebook for Developers.
 
 ## **Banks (`/ui/banks`)**
-![Bank overview](https://github.com/user-attachments/assets/a70428a1-058e-4dc1-8cce-492b6c1669f6)
+![Bank overview](./images/bank-overview.webp)
 
 * See your content banks, e.g., the `SEED_BANK_0` and `SEED_BANK_1` that are created using the demo buttons.
 * Each contains 5,000 sample hashes  
@@ -179,13 +179,15 @@ Users can create a hash bank separate from external hash exchanges like the NCME
 Once you add content, you can test by uploading either the same or different image in the “Find Content in Banks” section. If there is a match, the UI will show which hash bank the content was found in.
 
 ### Adding Content to Banks
-![Add bank content](https://github.com/user-attachments/assets/605afdd6-1a18-4c35-9869-e4abdc958e1e)
-![Add bank content modal](https://github.com/user-attachments/assets/861a7566-4990-4116-bf01-3c0cb12d855d)
+![Add bank content](./images/add-bank-content.webp)
+
+After clicking "Add Content":
+![Add bank content modal](./images/add-bank-content-modal.webp)
 
 You can add new content to banks, which will then be returned by match queries from the UI.
 
 ### Browsing Hash Banks
-![Find content in bank](https://github.com/user-attachments/assets/75ff1252-612f-43c0-b04b-3cd8fe52d7fc)
+![Find content in bank](./images/find-content-in-bank.webp)
 
 The web UI only allows searching for specific files within the hash banks. If users want to explore an overview or browse content in the hash banks, they have to query the database directly.
 
@@ -276,7 +278,7 @@ The Exchanges page lets users configure external hash exchanges that are API bas
 * Victim-centered approach
 
 ### Exchange Configuration
-<img width="492" alt="Exchange configuration" src="https://github.com/user-attachments/assets/a6986c74-77c2-4730-b652-2a05ac5ff85a" />
+![Exchange configuration](./images/exchange-configuration.webp)
 
 Several of the hash exchanges supported require credentials, provided in the form of a JSON blob. The JSON represents the [CollabConfig](https://github.com/facebook/ThreatExchange/blob/main/python-threatexchange/threatexchange/exchanges/collab_config.py#L12) for the exchange. The keys and data types must match the structure data. For example, here's the [exchange config for NMCEC](https://github.com/facebook/ThreatExchange/blob/main/python-threatexchange/threatexchange/exchanges/impl/ncmec_api.py#L101-L119). Using it as an example, it has two fields: 
 
@@ -284,13 +286,13 @@ Several of the hash exchanges supported require credentials, provided in the for
 * An optional field only\_esp\_ids, which accepts a container of ints. So one valid json blob would be
 
 ```json
-{ 'environment': 'https://hashsharing.ncmec.org/npo' } 
+{ "environment": "https://hashsharing.ncmec.org/npo" } 
 ```
 
 And one that filled out the optional field would be:
 
 ```json
-{ 'environment': 'https://hashsharing.ncmec.org/npo', 'only_esp_ids': [1] }
+{ "environment": "https://hashsharing.ncmec.org/npo", "only_esp_ids": [1] }
 ```
 
 Users can use this configuration to:
@@ -301,16 +303,17 @@ Users can use this configuration to:
 4. Monitor connection health and data flow
 4. Monitor connection health and data flow
 
-<img width="518" alt="Invalid exchange configuration" src="https://github.com/user-attachments/assets/82937f52-ce08-42ac-a29d-49414229d186" />
+![Invalid exchange configuration](./images/invalid-exchange-configuration.webp)
 
-Right now, you'll need to know the exact form for the JSON, which can be challenging unless you've read the underlying code. [python-threatexchange](../python-threatexchange) provides a CLI method that can help you create and view valid JSON, which can then be pasted into the tool `tx collab config`.
+Right now, you'll need to know the exact form for the JSON, which can be challenging unless you've read the underlying code. [python-threatexchange](../pytx/index.md) provides a CLI method that can help you create and view valid JSON, which can then be pasted into the tool `tx collab config`.
 
 
 ## **Match Debugging (`/ui/match`)**
-<img width="669" alt="Match debug is matching" src="https://github.com/user-attachments/assets/be097a7e-9207-4b37-be77-b15199c4dff9" />
-<img width="659" alt="Match debug no match" src="https://github.com/user-attachments/assets/a036180b-dbdc-4bf7-b623-212787b90b90" />
 
 The Match Debugging page allows users to do a side-by-side comparison of two images to test different hashing algorithms and see how perceptual hashing works. As of June 2025, the demo only supports PDQ. This is helpful to tune matching thresholds and validate algorithms, which is essential for understanding false positive/negative rates.
 
+If the images are a match, it will show a distance of 0, as follows:
+![Match debug is matching](./images/match-debug-is-matching.webp)
 
-If the images are a match, it will show a distance of 0. If the images are NOT a match, it will show whether it’s a match and the related distance between the two images.
+If the images are NOT a match, it will show whether it’s a match and the related distance between the two images:
+![Match debug no match](./images/match-debug-no-match.webp)
